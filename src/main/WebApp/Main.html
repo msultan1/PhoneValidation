@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<!--
+Phone Val Page
+-->
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Phone Validation</title>
+    <link rel="shortcut icon" href="../resources/favicon.ico">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script language = "javascript" type = "text/javascript">
+        $(document).ready(
+            function() {
+
+                $.ajax({
+                    url : 'http://localhost:8080/customers',
+                    type : 'GET',
+                    dataType : 'JSON',
+                    success : function(data) {
+                        var table = $("#customers tbody");
+                        var Items = data["_embedded"]["customers"];
+                        $(Items).each(function (index, item) {
+                            var country = Items[index].country;
+                            var name = Items[index].name;
+                            var phone = Items[index].phone;
+                            var code =Items[index].code;
+                            var state = Items[index].state;
+                            table.append(
+                                '<tr><th>' + name
+                                + '</th><td>'
+                                + phone
+                                + '</td><td>'
+                                + country
+                                + '</td><td>'
+                                + code
+                                +'</td><td>'
+                                + state
+                                + '</td></tr>');
+                        });
+                    },
+                    error : function(data) {
+                        alert(data.responseText);
+                    }
+
+                });
+            });
+    </script>
+    <script language = "javascript" type = "text/javascript">
+        function validate()
+        {
+            $("#cust tr").remove();
+            var state = document.getElementById("txt_state").value;
+            var country = document.getElementById("txt_country").value;
+            var code = document.getElementById("txt_code").value;
+            var Request_url = "";
+            if(state && country && code){
+                Request_url = "http://localhost:8080/customers/search/findByStateAndCodeAndCountry?state="+state+"&code="+code+"&country="+country;
+            }
+            else if (state && code){
+                Request_url ="http://localhost:8080/customers/search/findByStateAndCode?state="+state+"&code="+code;
+            }
+            else if (state && country){
+                Request_url ="http://localhost:8080/customers/search/findByCountryAndState?state="+state+"&country="+country;
+            }
+            else if (country && code){
+                Request_url ="http://localhost:8080/customers/search/findByCountryAndCode?&country="+country+"&code="+code;
+            }
+            else if (state){
+                Request_url = "http://localhost:8080/customers/search/findByState?state="+state;
+            }
+            else if (country){
+                Request_url = "http://localhost:8080/customers/search/findByCountry?country="+country;
+            }
+            else if (code){
+                Request_url = "http://localhost:8080/customers/search/findByCode?code="+code;
+            }
+            else {
+                Request_url = "http://localhost:8080/customers";
+            }
+
+            $.ajax({
+                url : Request_url,
+                type : 'GET',
+                dataType : 'JSON',
+                success : function(data) {
+                    var table = $("#customers tbody");
+                    var Items = data["_embedded"]["customers"];
+                    $(Items).each(function (index, item) {
+                        var country = Items[index].country;
+                        var name = Items[index].name;
+                        var phone = Items[index].phone;
+                        var code =Items[index].code;
+                        var state = Items[index].state;
+                        table.append(
+                            '<tr><th>' + name
+                            + '</th><td>'
+                            + phone
+                            + '</td><td>'
+                            + country
+                            + '</td><td>'
+                            + code
+                            +'</td><td>'
+                            + state
+                            + '</td></tr>');
+                    });
+                },
+                error : function(data) {
+                    alert(data.responseText);
+                }
+
+            });
+
+        }
+
+    </script>
+
+</head>
+<body>
+
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="Main.html"><img src="../resources/phoneLogo1.png" alt="Phone logo"  height="50" width="50"></a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="vs-logo-txt navbar-text hidden-xs"style="font-size:x-large;" onclick="window.location.href = 'Main.html'">Phone Validation</li>
+        </ul>
+    </div>
+</nav>
+
+
+
+<div class="p-3">
+    <h1></h1>
+</div>
+
+
+<div class="container rounded mb-0"   style="background-color: #d0f0c0; border:1px solid #cecece; max-width:750px"  >
+    <div class="row">
+        <div class="col">
+            <div class="text-center">
+                <div class="mt-1">
+                    <h1></h1>
+                </div>
+
+                <form id="filter_form" onsubmit="validate(); return false;" method="Get" enctype="multipart/form-data">
+
+                    <div class="form-row ml-5">
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-control" id="txt_country" type="text" placeholder="Country" aria-label="Country Input">
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-control" id="txt_code" type="text" placeholder="Code" aria-label="Code Input">
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-control" id="txt_state" type="text" placeholder="State" aria-label="State Input">
+                        </div>
+
+                    </div>
+
+                    <div class="mt-1">
+                        <h1></h1>
+                    </div>
+
+                    <div class="text-center">
+                        <div >
+                            <input class="btn btn-primary mb-3" type="submit" id="subBtn" name="subBtn" value="Filter" style="background-color: #228B22;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="p-3">
+    <h1></h1>
+</div>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-end">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+</nav>
+
+
+<div class="p-3">
+    <h1></h1>
+</div>
+
+<table class="table table-striped" id="customers">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Country</th>
+        <th scope="col">Code</th>
+        <th scope="col">State</th>
+    </tr>
+    </thead>
+    <tbody id="cust">
+
+    </tbody>
+</table>
+
+</body>
+
+</html>
