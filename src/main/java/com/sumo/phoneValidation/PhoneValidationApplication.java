@@ -9,6 +9,7 @@ public class PhoneValidationApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PhoneValidationApplication.class, args);
+
 		//countryService cs = Spring.bean(countryService.class);
 		//cs.compute();
 	}
